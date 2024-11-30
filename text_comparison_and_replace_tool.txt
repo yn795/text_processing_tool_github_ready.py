@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Comparison and Replace Tool</title>
+    <style>
+        body {{
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }}
+        h1 {{
+            text-align: center;
+        }}
+        .container {{
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }}
+        textarea {{
+            width: 100%;
+            height: 200px;
+            font-size: 16px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }}
+        button {{
+            display: block;
+            margin: 10px auto;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }}
+        button:hover {{
+            background-color: #0056b3;
+        }}
+        .output {{
+            width: 100%;
+            background: #272822;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-size: 14px;
+            height: 200px;
+            white-space: pre-wrap;
+            box-sizing: border-box;
+        }}
+    </style>
+</head>
+<body>
+    <h1>Text Comparison and Replace Tool</h1>
+    <div class="container">
+        <textarea id="text1" placeholder="Enter left text here..."></textarea>
+        <textarea id="text2" placeholder="Enter right text here..."></textarea>
+    </div>
+    <button onclick="compareAndReplace()">Compare and Replace</button>
+    <div class="output" id="output"></div>
+
+    <script>
+        const findList = [
+            "呼びかけ", "あまり", "パーセント", "（：「", "Q", "ており、", "、：「", "火を付け",
+            "ケガ", "前月", "わか", "こうした中", "とした上で", "「", "ON", "m", "ｍ", "mm", "ｍｍ", "cm", "ｃｍ", "km", "ｋｍ", "g", "ｇ", "kg", "ｋｇ", "メートルメートル", "ｋメートル", "kメートル"
+        ];
+
+        const replaceList = [
+            "呼び掛け", "余り", "％", "（「", "：「（Q.", "ていて、", "、「", "火をつけ",
+            "けが", "先月", "分か", "こうしたなか、", "としたうえで", "「", "⭐︎", "メートル", "メートル",
+            "ミリ", "ミリ", "センチ", "センチ", "キロ", "キロ", "グラム", "グラム", "キログラム", "キログラム", "ミリ", "キロ", "キロ"
+        ];
+
+        function compareAndReplace() {{
+            const text1 = document.getElementById('text1').value.split('\n');
+            const text2 = document.getElementById('text2').value.split('\n');
+            const maxLength = Math.max(text1.length, text2.length);
+            let result = '';
+
+            for (let i = 0; i < maxLength; i++) {{
+                const line1 = text1[i] || '';
+                let line2 = text2[i] || '';
+                
+                // Apply replacement only to the right-side text
+                for (let j = 0; j < findList.length; j++) {{
+                    const regex = new RegExp(findList[j], 'g');
+                    line2 = line2.replace(regex, replaceList[j]);
+                }}
+
+                if (line1 !== line2) {{
+                    result += `Line ${i + 1}:\nLeft: ${line1}\nRight: ${line2}\n\n`;
+                }}
+            }}
+
+            document.getElementById('output').innerText = result || 'No differences found.';
+        }}
+    </script>
+</body>
+</html>
